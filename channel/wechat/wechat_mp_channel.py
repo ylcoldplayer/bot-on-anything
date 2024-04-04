@@ -106,7 +106,7 @@ class WechatSubsribeAccount(Channel):
         return "目前无等待回复信息，请输入对话"
         
 
-    def send_message_to_server(message):
+    def send_message_to_server(self, message):
         print("starting to send request to tokoyo server")
         url = "http://43.163.242.45:80/"
     
