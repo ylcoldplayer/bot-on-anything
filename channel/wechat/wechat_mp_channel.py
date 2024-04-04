@@ -55,6 +55,8 @@ class WechatSubsribeAccount(Channel):
         if not res:
             cache[key] = {"status": "waiting", "req_times": 1}
             # thread_pool.submit(self._do_send, msg.content, context)
+            print("msg content: \n")
+            print(msg.content)
             reply_text = self.send_message_to_server(msg.content)
             logger.info('[WX_Public] reply content: {}'.format(reply_text))
             cache[key]['status'] = "success"
