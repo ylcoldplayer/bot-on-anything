@@ -98,6 +98,7 @@ class WechatSubsribeAccount(Channel):
 
     def send_message_to_server(message):
         # URL of your Flask application
+        print("starting to send request to tokoyo server")
         url = "http://43.163.242.45:80/"# Adjust if your app is running on a different host or port
     #    url = "http://127.0.0.1:80"
     
@@ -105,7 +106,8 @@ class WechatSubsribeAccount(Channel):
         payload = json.dumps({
             "message": message
         })
-    
+
+        print("payload ready...")
         # Set headers to indicate that we're sending JSON
         headers = {
             'Content-Type': 'application/json'
@@ -113,6 +115,7 @@ class WechatSubsribeAccount(Channel):
     
         try:
             # Send the POST request and wait for the response
+            print("sending the post request...")
             response = requests.post(url, headers=headers, data=payload)
     
             # Check if the request was successful (HTTP status code 200)
