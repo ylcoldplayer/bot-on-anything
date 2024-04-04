@@ -77,6 +77,8 @@ class WechatSubsribeAccount(Channel):
     def _do_send(self, query, context):
         key = query + '|' + context['from_user_id']
         # reply_text = super().build_reply_content(query, context)
+        print("query: " + str(query))
+        print("context: " + str(context) )
         reply_text = send_message_to_server(query)
         print("reply_text:" + reply_text)
         logger.info('[WX_Public] reply content: {}'.format(reply_text))
