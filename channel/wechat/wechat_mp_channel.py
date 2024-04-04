@@ -78,6 +78,7 @@ class WechatSubsribeAccount(Channel):
         key = query + '|' + context['from_user_id']
         # reply_text = super().build_reply_content(query, context)
         print("query: " + str(query))
+        print("query type: " + type(query))
         print("context: " + str(context) )
         # reply_text = self.send_message_to_server(str(query))
         reply_text = "我不知道你在说啥"
