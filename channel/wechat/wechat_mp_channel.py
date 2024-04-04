@@ -80,8 +80,8 @@ class WechatSubsribeAccount(Channel):
         print("query: " + str(query))
         print(type(query))
         print("context: " + str(context) )
-        # reply_text = self.send_message_to_server(str(query))
-        reply_text = "我不知道你在说啥"
+        reply_text = self.send_message_to_server(message=query)
+        # reply_text = "我不知道你在说啥"
         print("reply_text:" + reply_text)
         logger.info('[WX_Public] reply content: {}'.format(reply_text))
         cache[key]['status'] = "success"
@@ -99,10 +99,8 @@ class WechatSubsribeAccount(Channel):
         
 
     def send_message_to_server(message):
-        # URL of your Flask application
         print("starting to send request to tokoyo server")
-        url = "http://43.163.242.45:80/"# Adjust if your app is running on a different host or port
-    #    url = "http://127.0.0.1:80"
+        url = "http://43.163.242.45:80/"
     
         # Prepare the JSON payload with the message
         payload = json.dumps({
