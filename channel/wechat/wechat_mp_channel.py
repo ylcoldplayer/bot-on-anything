@@ -57,7 +57,8 @@ class WechatSubsribeAccount(Channel):
             # thread_pool.submit(self._do_send, msg.content, context)
             print("msg content: \n")
             print(msg.content)
-            reply_text = self.send_message_to_server(msg.content.strip())
+            # reply_text = self.send_message_to_server(msg.content.strip())
+            reply_text = self.send_message_to_server("讲个笑话")
             logger.info('[WX_Public] reply content: {}'.format(reply_text))
             cache[key]['status'] = "success"
             cache[key]['data'] = reply_text
