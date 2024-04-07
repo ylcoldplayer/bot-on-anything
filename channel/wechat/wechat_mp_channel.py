@@ -37,6 +37,46 @@ def hello_world(msg):
             return WechatSubsribeAccount().handle(msg)
 
 
+def send_message_to_server(msg):
+    print("starting to send request to tokoyo server")
+    url = "http://43.163.242.45:80/"
+
+    # Prepare the JSON payload with the message
+    payload = json.dumps({
+        "message": msg.content,
+        "user_id": msg.source
+    })
+
+    print("payload ready...")
+    # Set headers to indicate that we're sending JSON
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        # Send the POST request and wait for the response
+        print("sending the post request...")
+        response = requests.post(url, headers=headers, data=payload)
+
+        # Check if the request was successful (HTTP status code 200)
+        if response.status_code == 200:
+            # Parse the JSON response and print the result
+            response_data = response.json()
+            print("Response from server:", response_data.get("response"))
+            return response_data.get("response")
+        else:
+            # Handle HTTP errors (e.g., 404, 500)
+            print("Failed to get a successful response from server, status code:", response.status_code)
+            print("Response content:", response.text)
+            return "对不起，我没有找到答案"
+
+    except requests.exceptions.RequestException as e:
+        # Handle errors that occur during the request sending process
+        # (e.g., network errors, invalid URL)
+        print("An error occurred while sending the request:", str(e))
+        return "对不起，我没有找到答案"
+
+
 class WechatSubsribeAccount(Channel):
     def startup(self):
         logger.info('[WX_Public] Wechat Public account service start!')
@@ -57,12 +97,11 @@ class WechatSubsribeAccount(Channel):
             # thread_pool.submit(self._do_send, msg.content, context)
             print("msg content: \n")
             print(msg.content)
-            reply_text = self.send_message_to_server(msg.content)
+            reply_text = send_message_to_server(msg)
             # reply_text = self.send_message_to_server("讲个笑话")
             logger.info('[WX_Public] reply content: {}'.format(reply_text))
             cache[key]['status'] = "success"
             cache[key]['data'] = reply_text
-            
 
         res = cache.get(key)
         logger.info("count={}, res={}".format(count, res))
@@ -88,7 +127,7 @@ class WechatSubsribeAccount(Channel):
         print("query: " + str(query))
         print(type(query))
         print("context: " + str(context) )
-        reply_text = self.send_message_to_server(message=query)
+        reply_text = send_message_to_server(message=query)
         # reply_text = "我不知道你在说啥"
         print("reply_text:" + reply_text)
         logger.info('[WX_Public] reply content: {}'.format(reply_text))
@@ -104,42 +143,3 @@ class WechatSubsribeAccount(Channel):
                     return value.get("data")
                 return "还在处理中，请稍后再试"
         return "目前无等待回复信息，请输入对话"
-        
-
-    def send_message_to_server(self, message):
-        print("starting to send request to tokoyo server")
-        url = "http://43.163.242.45:80/"
-    
-        # Prepare the JSON payload with the message
-        payload = json.dumps({
-            "message": message
-        })
-
-        print("payload ready...")
-        # Set headers to indicate that we're sending JSON
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    
-        try:
-            # Send the POST request and wait for the response
-            print("sending the post request...")
-            response = requests.post(url, headers=headers, data=payload)
-    
-            # Check if the request was successful (HTTP status code 200)
-            if response.status_code == 200:
-                # Parse the JSON response and print the result
-                response_data = response.json()
-                print("Response from server:", response_data.get("response"))
-                return response_data.get("response")
-            else:
-                # Handle HTTP errors (e.g., 404, 500)
-                print("Failed to get a successful response from server, status code:", response.status_code)
-                print("Response content:", response.text)
-                return "对不起，我没有找到答案"
-                
-        except requests.exceptions.RequestException as e:
-            # Handle errors that occur during the request sending process
-            # (e.g., network errors, invalid URL)
-            print("An error occurred while sending the request:", str(e))
-            return "对不起，我没有找到答案"
